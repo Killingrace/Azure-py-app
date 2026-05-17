@@ -1,0 +1,22 @@
+# Node
+node_modules/
+dist/
+build/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+env/
+.venv/
+*.db
+
+# Environment variables
+.env
+.env.*
+
+# Project docs
+project_description.txt
+*.docx
+.vscode/

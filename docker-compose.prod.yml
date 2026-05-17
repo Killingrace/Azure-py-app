@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-liga_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-liga_password}
+      POSTGRES_DB: ${POSTGRES_DB:-liga_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg_async://liga_user:liga_password@db:5432/liga_db}
+      SECRET_KEY: ${SECRET_KEY:-supersecretkey_from_docker_compose}
+      PORT: 8000
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000/api}
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
