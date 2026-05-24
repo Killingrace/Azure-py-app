@@ -177,7 +177,11 @@ async def delete_location(db: AsyncSession, location_id: int):
 
 # --- Game ---
 async def get_games(db: AsyncSession, skip: int = 0, limit: int = 100):
-    result = await db.execute(select(models.Game).offset(skip).limit(limit))
+    result = await db.execute(
+        select(models.Game)
+        .options(selectinload(models.Game.score), selectinload(models.Game.goals))
+        .offset(skip).limit(limit)
+    )
     return result.scalars().all()
 
 async def create_game(db: AsyncSession, game: schemas.GameCreate):

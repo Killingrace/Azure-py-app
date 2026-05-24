@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ApiService } from '../api';
 import type { Team } from '../api';
 import { Trophy, Star, ShieldAlert } from 'lucide-react';
