@@ -11,6 +11,20 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-seed:
+    build: ./backend
+    command: python seed.py
+    environment:
+      DATABASE_URL: postgresql+psycopg_async://liga_user:liga_password@db:5432/liga_db
+    depends_on:
+      db:
+        condition: service_healthy
 
   backend:
     build: ./backend
@@ -20,18 +34,25 @@ services:
       DATABASE_URL: postgresql+psycopg_async://liga_user:liga_password@db:5432/liga_db
       SECRET_KEY: supersecretkey_from_docker_compose
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
     volumes:
       - ./backend:/app
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=/api
     ports:
-      - "5173:5173"
+      - "5173:80"
     environment:
-      VITE_API_URL: http://localhost:8000
+      VITE_API_URL: /api
     depends_on:
-      - backend
+      backend:
+        condition: service_started
     volumes:
       - ./frontend:/app
       - /app/node_modules

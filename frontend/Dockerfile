@@ -6,6 +6,8 @@ RUN npm install
 COPY . .
 # You can pass VITE_API_URL via --build-arg if building specifically for an environment
 # But usually relative paths or dynamic runtime configs are preferred.
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 # Stage 2: Serve with Nginx
