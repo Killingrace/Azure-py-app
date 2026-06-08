@@ -14,9 +14,13 @@ async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100):
 async def create_user(db: AsyncSession, user: schemas.UserCreate, hashed_password: str):
     db_user = models.User(username=user.username, role=user.role, team_id=user.team_id, hashed_password=hashed_password)
     db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return db_user
+    try:
+        await db.commit()
+        await db.refresh(db_user)
+        return db_user
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(status_code=400, detail="Username already registered or invalid team_id")
 
 async def delete_user(db: AsyncSession, user_id: int):
     result = await db.execute(select(models.User).filter(models.User.id == user_id))
@@ -198,8 +202,14 @@ async def create_game(db: AsyncSession, game: schemas.GameCreate):
     db_game = models.Game(**game.model_dump())
     db.add(db_game)
     await db.commit()
-    await db.refresh(db_game)
-    return db_game
+    
+    # Eager loading aby Pydantic nie wyrzucał MissingGreenlet
+    result = await db.execute(
+        select(models.Game)
+        .options(selectinload(models.Game.score), selectinload(models.Game.goals))
+        .filter(models.Game.id == db_game.id)
+    )
+    return result.scalar_one()
 
 async def delete_game(db: AsyncSession, game_id: int):
     result = await db.execute(select(models.Game).filter(models.Game.id == game_id))
@@ -334,7 +344,10 @@ async def get_best_player_vs_team(db: AsyncSession, team_id: int):
 
     p_result = await db.execute(select(models.Player).filter(models.Player.id == row.player_id))
     player = p_result.scalar_one_or_none()
-    return {"player": player, "goals": row.goal_count}
+    if player:
+        player_schema = schemas.Player.model_validate(player)
+        return {"player": player_schema, "goals": row.goal_count}
+    return None
 
 async def get_best_team_vs_team(db: AsyncSession, team_id: int):
     result = await db.execute(
@@ -369,4 +382,7 @@ async def get_best_team_vs_team(db: AsyncSession, team_id: int):
     best_opponent_id = sorted(stats.items(), key=lambda x: (x[1]["points"], x[1]["goal_diff"], x[1]["goals_scored"]), reverse=True)[0][0]
     t_result = await db.execute(select(models.Team).filter(models.Team.id == best_opponent_id))
     best_team = t_result.scalar_one_or_none()
-    return {"team": best_team, "stats": stats[best_opponent_id]}
+    if best_team:
+        team_schema = schemas.Team.model_validate(best_team)
+        return {"team": team_schema, "stats": stats[best_opponent_id]}
+    return None

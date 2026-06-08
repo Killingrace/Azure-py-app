@@ -191,7 +191,7 @@ const Admin = () => {
         }
       }
 
-      await ApiService.createGame({ 
+      await ApiService.createGame({
         schedule_id: schedId,
         home_team_id: Number(newGame.home_team_id),
         visitor_team_id: Number(newGame.visitor_team_id),
@@ -249,7 +249,7 @@ const Admin = () => {
   return (
     <div className="admin-panel">
       <h1>Management Panel</h1>
-      
+
       {errorMsg && (
         <div style={{ padding: '1rem', background: 'rgba(239,68,68,0.2)', border: '1px solid #ef4444', color: '#fca5a5', borderRadius: '8px', marginBottom: '1rem' }}>
           <strong>Error: </strong> {errorMsg}
@@ -260,7 +260,7 @@ const Admin = () => {
         {tabs.map(tab => {
           if (tab.adminOnly && role !== 'admin') return null;
           return (
-            <button 
+            <button
               key={tab.id}
               className={`btn ${activeTab === tab.id ? 'btn-primary' : 'btn-secondary'}`}
               onClick={() => { setActiveTab(tab.id); setEditingLeague(null); setEditingTeam(null); setEditingPlayer(null); }}
@@ -325,7 +325,7 @@ const Admin = () => {
                     <td style={{ padding: '0.5rem' }}>{u.role}</td>
                     <td style={{ padding: '0.5rem' }}>{u.team_id ? teams.find(t => t.id === u.team_id)?.name : '-'}</td>
                     <td style={{ padding: '0.5rem' }}>
-                      <button className="btn" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', background: '#ef4444', color: 'white' }} 
+                      <button className="btn" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', background: '#ef4444', color: 'white' }}
                         onClick={() => handleConfirmDelete(`Delete user ${u.username}?`, () => handleDeleteUser(u.id))}>Delete</button>
                     </td>
                   </tr>
@@ -344,7 +344,7 @@ const Admin = () => {
                 <input type="text" className="form-control" value={newLeague} onChange={e => setNewLeague(e.target.value)} required />
               </div>
               <button type="submit" className="btn btn-primary">{editingLeague ? 'Update' : 'Add'}</button>
-              {editingLeague && <button type="button" className="btn btn-secondary" onClick={() => {setEditingLeague(null); setNewLeague('');}} style={{marginLeft: '0.5rem'}}>Cancel</button>}
+              {editingLeague && <button type="button" className="btn btn-secondary" onClick={() => { setEditingLeague(null); setNewLeague(''); }} style={{ marginLeft: '0.5rem' }}>Cancel</button>}
             </form>
             <ul style={{ marginTop: '1.5rem' }}>{leagues.map(l => (
               <li key={l.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
@@ -374,13 +374,13 @@ const Admin = () => {
                 </select>
               </div>
               <button type="submit" className="btn btn-primary">{editingTeam ? 'Update' : 'Add'}</button>
-              {editingTeam && <button type="button" className="btn btn-secondary" onClick={() => {setEditingTeam(null); setNewTeam({name:'', league_id:''});}} style={{marginLeft: '0.5rem'}}>Cancel</button>}
+              {editingTeam && <button type="button" className="btn btn-secondary" onClick={() => { setEditingTeam(null); setNewTeam({ name: '', league_id: '' }); }} style={{ marginLeft: '0.5rem' }}>Cancel</button>}
             </form>
             <ul style={{ marginTop: '1.5rem' }}>{teams.map(t => (
               <li key={t.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                 {t.name}
                 <div>
-                  <button className="btn btn-secondary" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', marginRight: '0.5rem' }} onClick={() => { setEditingTeam(t); setNewTeam({name: t.name, league_id: t.league_id.toString()}); }}>Edit</button>
+                  <button className="btn btn-secondary" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', marginRight: '0.5rem' }} onClick={() => { setEditingTeam(t); setNewTeam({ name: t.name, league_id: t.league_id.toString() }); }}>Edit</button>
                   <button className="btn" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', background: '#ef4444', color: 'white' }} onClick={() => handleConfirmDelete(`Delete team ${t.name}?`, () => handleDeleteTeam(t.id))}>Delete</button>
                 </div>
               </li>
@@ -413,10 +413,10 @@ const Admin = () => {
               </div>
               <div style={{ gridColumn: 'span 2' }}>
                 <button type="submit" className="btn btn-primary">{editingPlayer ? 'Update' : 'Add'}</button>
-                {editingPlayer && <button type="button" className="btn btn-secondary" onClick={() => {setEditingPlayer(null); setNewPlayer({first_name:'', last_name:'', number:'', team_id:''});}} style={{marginLeft: '0.5rem'}}>Cancel</button>}
+                {editingPlayer && <button type="button" className="btn btn-secondary" onClick={() => { setEditingPlayer(null); setNewPlayer({ first_name: '', last_name: '', number: '', team_id: '' }); }} style={{ marginLeft: '0.5rem' }}>Cancel</button>}
               </div>
             </form>
-            
+
             <div style={{ marginTop: '2rem', overflowX: 'auto' }}>
               <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
                 <thead>
@@ -434,19 +434,20 @@ const Admin = () => {
                     .map(p => {
                       const teamName = teams.find(t => t.id === p.team_id)?.name || 'Unknown';
                       return (
-                      <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                        <td style={{ padding: '0.5rem' }}>{p.first_name} {p.last_name}</td>
-                        <td style={{ padding: '0.5rem' }}>{p.number}</td>
-                        <td style={{ padding: '0.5rem', color: 'var(--text-secondary)' }}>{teamName}</td>
-                        <td style={{ padding: '0.5rem' }}>
-                          <button className="btn btn-secondary" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', marginRight: '0.5rem' }} onClick={() => { 
-                            setEditingPlayer(p); 
-                            setNewPlayer({first_name: p.first_name, last_name: p.last_name, number: p.number.toString(), team_id: p.team_id.toString()}); 
-                          }}>Edit</button>
-                          <button className="btn" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', background: '#ef4444', color: 'white' }} onClick={() => handleConfirmDelete(`Delete player ${p.first_name}?`, () => handleDeletePlayer(p.id))}>Delete</button>
-                        </td>
-                      </tr>
-                    )})}
+                        <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                          <td style={{ padding: '0.5rem' }}>{p.first_name} {p.last_name}</td>
+                          <td style={{ padding: '0.5rem' }}>{p.number}</td>
+                          <td style={{ padding: '0.5rem', color: 'var(--text-secondary)' }}>{teamName}</td>
+                          <td style={{ padding: '0.5rem' }}>
+                            <button className="btn btn-secondary" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', marginRight: '0.5rem' }} onClick={() => {
+                              setEditingPlayer(p);
+                              setNewPlayer({ first_name: p.first_name, last_name: p.last_name, number: p.number.toString(), team_id: p.team_id.toString() });
+                            }}>Edit</button>
+                            <button className="btn" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', background: '#ef4444', color: 'white' }} onClick={() => handleConfirmDelete(`Delete player ${p.first_name}?`, () => handleDeletePlayer(p.id))}>Delete</button>
+                          </td>
+                        </tr>
+                      )
+                    })}
                 </tbody>
               </table>
             </div>
@@ -454,7 +455,7 @@ const Admin = () => {
         )}
 
         {activeTab === 'locations' && (
-           <div className="glass-panel">
+          <div className="glass-panel">
             <h2>Manage Locations</h2>
             <form onSubmit={handleAddLocation}>
               <div className="form-group">
@@ -477,7 +478,7 @@ const Admin = () => {
         )}
 
         {activeTab === 'games' && (
-           <div className="glass-panel" style={{ gridColumn: 'span 2' }}>
+          <div className="glass-panel" style={{ gridColumn: 'span 2' }}>
             <h2>Create Game Matchup</h2>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>Schedules will be automatically applied. Both teams must have at least 11 registered players to create a game.</p>
             <form onSubmit={handleAddGame} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -526,77 +527,78 @@ const Admin = () => {
             <ul style={{ marginTop: '1.5rem' }}>{games.map(g => {
               if (role === 'coach' && g.home_team_id !== teamId && g.visitor_team_id !== teamId) return null;
               return (
-              <li key={g.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <span>{g.name}</span>
-                <button className="btn" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', background: '#ef4444', color: 'white' }} onClick={() => handleConfirmDelete(`Delete game ${g.name}?`, () => handleDeleteGame(g.id))}>Delete</button>
-              </li>
-            )})}</ul>
+                <li key={g.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                  <span>{g.name}</span>
+                  <button className="btn" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', background: '#ef4444', color: 'white' }} onClick={() => handleConfirmDelete(`Delete game ${g.name}?`, () => handleDeleteGame(g.id))}>Delete</button>
+                </li>
+              )
+            })}</ul>
           </div>
         )}
 
         {activeTab === 'match_data' && (
-           <>
-           <div className="glass-panel">
-            <h2>Set Final Score</h2>
-            <form onSubmit={handleSetScore}>
-              <div className="form-group">
-                <label className="form-label">Game</label>
-                <select className="form-control" value={scoreForm.game_id} onChange={e => setScoreForm({ ...scoreForm, game_id: e.target.value })} required>
-                  <option value="">Select...</option>
-                  {games.map(g => {
-                    if (role === 'coach' && g.home_team_id !== teamId && g.visitor_team_id !== teamId) return null;
-                    return <option key={g.id} value={g.id}>{g.name}</option>
-                  })}
-                </select>
-              </div>
-              <div style={{ display: 'flex', gap: '1rem' }}>
+          <>
+            <div className="glass-panel">
+              <h2>Set Final Score</h2>
+              <form onSubmit={handleSetScore}>
                 <div className="form-group">
-                  <label className="form-label">Home Score</label>
-                  <input type="number" className="form-control" value={scoreForm.home_score} onChange={e => setScoreForm({ ...scoreForm, home_score: Number(e.target.value) })} required />
+                  <label className="form-label">Game</label>
+                  <select className="form-control" value={scoreForm.game_id} onChange={e => setScoreForm({ ...scoreForm, game_id: e.target.value })} required>
+                    <option value="">Select...</option>
+                    {games.map(g => {
+                      if (role === 'coach' && g.home_team_id !== teamId && g.visitor_team_id !== teamId) return null;
+                      return <option key={g.id} value={g.id}>{g.name}</option>
+                    })}
+                  </select>
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Visitor Score</label>
-                  <input type="number" className="form-control" value={scoreForm.visitor_score} onChange={e => setScoreForm({ ...scoreForm, visitor_score: Number(e.target.value) })} required />
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <div className="form-group">
+                    <label className="form-label">Home Score</label>
+                    <input type="number" className="form-control" value={scoreForm.home_score} onChange={e => setScoreForm({ ...scoreForm, home_score: Number(e.target.value) })} required />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Visitor Score</label>
+                    <input type="number" className="form-control" value={scoreForm.visitor_score} onChange={e => setScoreForm({ ...scoreForm, visitor_score: Number(e.target.value) })} required />
+                  </div>
                 </div>
-              </div>
-              <button type="submit" className="btn btn-primary">Save Score</button>
-            </form>
-          </div>
+                <button type="submit" className="btn btn-primary">Save Score</button>
+              </form>
+            </div>
 
-          <div className="glass-panel">
-            <h2>Add Goal Scorer</h2>
-            <form onSubmit={handleAddGoal}>
-              <div className="form-group">
-                <label className="form-label">Game</label>
-                <select className="form-control" value={goalForm.game_id} onChange={e => setGoalForm({ ...goalForm, game_id: e.target.value })} required>
-                  <option value="">Select...</option>
-                  {games.map(g => {
-                    if (role === 'coach' && g.home_team_id !== teamId && g.visitor_team_id !== teamId) return null;
-                    return <option key={g.id} value={g.id}>{g.name}</option>
-                  })}
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Player</label>
-                <select className="form-control" value={goalForm.player_id} onChange={e => setGoalForm({ ...goalForm, player_id: e.target.value })} required>
-                  <option value="">Select...</option>
-                  {players.filter(p => availableTeams.some(t => t.id === p.team_id)).map(p => <option key={p.id} value={p.id}>{p.first_name} {p.last_name}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Team Scored For</label>
-                <select className="form-control" value={goalForm.team_id} onChange={e => setGoalForm({ ...goalForm, team_id: e.target.value })} required>
-                  <option value="">Select...</option>
-                  {availableTeams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Minute</label>
-                <input type="number" className="form-control" value={goalForm.minute} onChange={e => setGoalForm({ ...goalForm, minute: e.target.value })} required />
-              </div>
-              <button type="submit" className="btn btn-primary">Add Goal</button>
-            </form>
-          </div>
+            <div className="glass-panel">
+              <h2>Add Goal Scorer</h2>
+              <form onSubmit={handleAddGoal}>
+                <div className="form-group">
+                  <label className="form-label">Game</label>
+                  <select className="form-control" value={goalForm.game_id} onChange={e => setGoalForm({ ...goalForm, game_id: e.target.value })} required>
+                    <option value="">Select...</option>
+                    {games.map(g => {
+                      if (role === 'coach' && g.home_team_id !== teamId && g.visitor_team_id !== teamId) return null;
+                      return <option key={g.id} value={g.id}>{g.name}</option>
+                    })}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Player</label>
+                  <select className="form-control" value={goalForm.player_id} onChange={e => setGoalForm({ ...goalForm, player_id: e.target.value })} required>
+                    <option value="">Select...</option>
+                    {players.filter(p => availableTeams.some(t => t.id === p.team_id)).map(p => <option key={p.id} value={p.id}>{p.first_name} {p.last_name}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Team Scored For</label>
+                  <select className="form-control" value={goalForm.team_id} onChange={e => setGoalForm({ ...goalForm, team_id: e.target.value })} required>
+                    <option value="">Select...</option>
+                    {availableTeams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Minute</label>
+                  <input type="number" className="form-control" value={goalForm.minute} onChange={e => setGoalForm({ ...goalForm, minute: e.target.value })} required />
+                </div>
+                <button type="submit" className="btn btn-primary">Add Goal</button>
+              </form>
+            </div>
           </>
         )}
       </div>

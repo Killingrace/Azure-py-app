@@ -9,3 +9,9 @@ python-dotenv
 PyJWT
 bcrypt
 python-multipart
+
+pytest
+pytest-asyncio
+pytest-cov
+httpx
+aiosqlite

@@ -4,9 +4,9 @@ services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER: liga_user
-      POSTGRES_PASSWORD: liga_password
-      POSTGRES_DB: liga_db
+      POSTGRES_USER: ${POSTGRES_USER:-liga_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-liga_password}
+      POSTGRES_DB: ${POSTGRES_DB:-liga_db}
     ports:
       - "5432:5432"
     volumes:
@@ -21,7 +21,7 @@ services:
     build: ./backend
     command: python seed.py
     environment:
-      DATABASE_URL: postgresql+psycopg_async://liga_user:liga_password@db:5432/liga_db
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg_async://liga_user:liga_password@db:5432/liga_db}
     depends_on:
       db:
         condition: service_healthy
@@ -29,17 +29,16 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8000:8000"
+      - "8080:8000"
     environment:
-      DATABASE_URL: postgresql+psycopg_async://liga_user:liga_password@db:5432/liga_db
-      SECRET_KEY: supersecretkey_from_docker_compose
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg_async://liga_user:liga_password@db:5432/liga_db}
+      SECRET_KEY: ${SECRET_KEY:-supersecretkey_from_docker_compose}
+      PORT: 8000
     depends_on:
       db:
         condition: service_healthy
       db-seed:
         condition: service_completed_successfully
-    volumes:
-      - ./backend:/app
 
   frontend:
     build:
@@ -47,15 +46,12 @@ services:
       args:
         - VITE_API_URL=/api
     ports:
-      - "5173:80"
+      - "81:80"
     environment:
       VITE_API_URL: /api
     depends_on:
       backend:
         condition: service_started
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
 
 volumes:
   postgres_data:
