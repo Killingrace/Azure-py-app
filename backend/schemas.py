@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 import datetime
 
@@ -11,8 +11,7 @@ class LeagueCreate(LeagueBase):
 
 class League(LeagueBase):
     id: int
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- User ---
 class UserBase(BaseModel):
@@ -25,14 +24,12 @@ class UserCreate(UserBase):
 
 class UserResponse(UserBase):
     id: int
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class User(UserBase):
     id: int
     hashed_password: str
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Token(BaseModel):
     access_token: str
@@ -51,8 +48,7 @@ class TeamCreate(TeamBase):
 
 class Team(TeamBase):
     id: int
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Player ---
 class PlayerBase(BaseModel):
@@ -66,8 +62,7 @@ class PlayerCreate(PlayerBase):
 
 class Player(PlayerBase):
     id: int
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Schedule ---
 class ScheduleBase(BaseModel):
@@ -79,8 +74,7 @@ class ScheduleCreate(ScheduleBase):
 
 class Schedule(ScheduleBase):
     id: int
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Location ---
 class LocationBase(BaseModel):
@@ -92,8 +86,7 @@ class LocationCreate(LocationBase):
 
 class Location(LocationBase):
     id: int
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Goal ---
 class GoalBase(BaseModel):
@@ -107,8 +100,7 @@ class GoalCreate(GoalBase):
 
 class Goal(GoalBase):
     id: int
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Score ---
 class ScoreBase(BaseModel):
@@ -120,8 +112,7 @@ class ScoreCreate(ScoreBase):
 
 class Score(ScoreBase):
     game_id: int
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Game ---
 class GameBase(BaseModel):
@@ -139,5 +130,4 @@ class Game(GameBase):
     id: int
     score: Optional[Score] = None
     goals: List[Goal] = []
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

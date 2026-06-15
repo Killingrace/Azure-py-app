@@ -64,7 +64,7 @@ class Game(Base):
     visitor_team_id = Column(Integer, ForeignKey("teams.id"))
     location_id = Column(Integer, ForeignKey("locations.id"))
     name = Column(String)
-    date_and_time = Column(DateTime, default=datetime.datetime.utcnow)
+    date_and_time = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
 
     schedule = relationship("Schedule", back_populates="games")
     home_team = relationship("Team", foreign_keys=[home_team_id])
